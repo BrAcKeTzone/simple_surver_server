@@ -18,6 +18,10 @@ const SurveyResponse = sequelize.define("SurveyResponse", {
     type: DataTypes.JSON,
     allowNull: false,
   },
+  dateTaken: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
 });
 
 module.exports = SurveyResponse;

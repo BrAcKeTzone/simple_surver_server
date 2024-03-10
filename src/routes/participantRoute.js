@@ -6,4 +6,5 @@ router.post("/save", participantController.saveSurveyResponse);
 
 router.get("/review", participantController.getAllSurveyResponses);
 
+router.get("/filter", participantController.getFilteredSurveyResponses);
 module.exports = router;

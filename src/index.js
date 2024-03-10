@@ -10,9 +10,22 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: [/https:\/\/mysurveyonline\.mathsaya4kids\.site($|\/.*)/],
+  methods: "GET,PUT,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
 
-app.options("*", cors());
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
+
+// app.use(cors());
+
+// app.options("*", cors());
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -34,7 +47,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   sequelize
-    .sync({ alter: false }) // Use { force: true } or { alter: true } during development to drop and recreate tables
+    .sync({ force: true }) // Use { force: true } or { alter: true } during development to drop and recreate tables
     .then(() => {
       console.log("Connected to the database");
     })
