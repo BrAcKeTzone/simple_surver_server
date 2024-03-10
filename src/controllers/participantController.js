@@ -22,93 +22,46 @@ const saveSurveyResponse = async (req, res) => {
   }
 };
 
-// Function to get all saved data entries
+// Function to get all saved data entries with optional gender filter
 const getAllSurveyResponses = async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
+    const { startDate, endDate, gender } = req.query;
+
+    // Initialize filter object
+    const filter = {};
 
     // Check if startDate and endDate are provided
     if (startDate && endDate) {
-      const allSurveyResponses = await SurveyResponse.findAll({
-        where: {
-          dateTaken: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-      });
-      const parsedSurveyResponses = allSurveyResponses.map((response) => {
-        return {
-          ...response.toJSON(),
-          answers: response.answers,
-        };
-      });
-
-      res.status(200).json(parsedSurveyResponses);
-    } else {
-      const allSurveyResponses = await SurveyResponse.findAll();
-      const parsedSurveyResponses = allSurveyResponses.map((response) => {
-        return {
-          ...response.toJSON(),
-          answers: response.answers,
-        };
-      });
-
-      res.status(200).json(parsedSurveyResponses);
+      filter.dateTaken = {
+        [Op.between]: [startDate, endDate],
+      };
     }
+
+    // Check if gender is provided
+    if (gender) {
+      filter.gender = gender;
+    }
+
+    // Retrieve survey responses based on filters
+    const allSurveyResponses = await SurveyResponse.findAll({
+      where: filter,
+    });
+
+    // Parse survey responses
+    const parsedSurveyResponses = allSurveyResponses.map((response) => ({
+      ...response.toJSON(),
+      answers: response.answers,
+    }));
+
+    // Send response
+    res.status(200).json(parsedSurveyResponses);
   } catch (error) {
     console.error("Error getting survey responses:", error);
     res.status(500).json({ message: "Failed to retrieve survey responses" });
   }
 };
 
-// Function to get filtered survey responses by age range and gender
-const getFilteredSurveyResponses = async (req, res) => {
-  try {
-    const { minAge, maxAge, gender } = req.query;
-
-    // Build filter object
-    const filter = {};
-    if (minAge && maxAge) {
-      filter.age = {
-        [Op.between]: [minAge, maxAge],
-      };
-    } else if (minAge) {
-      filter.age = {
-        [Op.gte]: minAge,
-      };
-    } else if (maxAge) {
-      filter.age = {
-        [Op.lte]: maxAge,
-      };
-    }
-
-    if (gender) {
-      filter.gender = gender;
-    }
-
-    // Retrieve filtered survey responses
-    const filteredSurveyResponses = await SurveyResponse.findAll({
-      where: filter,
-    });
-
-    const parsedFilteredSurveyResponses = filteredSurveyResponses.map(
-      (response) => ({
-        ...response.toJSON(),
-        answers: response.answers,
-      })
-    );
-
-    res.status(200).json(parsedFilteredSurveyResponses);
-  } catch (error) {
-    console.error("Error getting filtered survey responses:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to retrieve filtered survey responses" });
-  }
-};
-
 module.exports = {
   saveSurveyResponse,
   getAllSurveyResponses,
-  getFilteredSurveyResponses,
 };
