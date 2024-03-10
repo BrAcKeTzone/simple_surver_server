@@ -36,17 +36,23 @@ const getAllSurveyResponses = async (req, res) => {
           },
         },
       });
-      const parsedSurveyResponses = allSurveyResponses.map((response) => ({
-        ...response.toJSON(),
-        answers: JSON.parse(response.answers),
-      }));
+      const parsedSurveyResponses = allSurveyResponses.map((response) => {
+        return {
+          ...response.toJSON(),
+          answers: response.answers,
+        };
+      });
+
       res.status(200).json(parsedSurveyResponses);
     } else {
       const allSurveyResponses = await SurveyResponse.findAll();
-      const parsedSurveyResponses = allSurveyResponses.map((response) => ({
-        ...response.toJSON(),
-        answers: JSON.parse(response.answers),
-      }));
+      const parsedSurveyResponses = allSurveyResponses.map((response) => {
+        return {
+          ...response.toJSON(),
+          answers: response.answers,
+        };
+      });
+
       res.status(200).json(parsedSurveyResponses);
     }
   } catch (error) {
@@ -88,7 +94,7 @@ const getFilteredSurveyResponses = async (req, res) => {
     const parsedFilteredSurveyResponses = filteredSurveyResponses.map(
       (response) => ({
         ...response.toJSON(),
-        answers: JSON.parse(response.answers),
+        answers: response.answers,
       })
     );
 
