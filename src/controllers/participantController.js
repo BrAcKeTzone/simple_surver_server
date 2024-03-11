@@ -22,7 +22,7 @@ const saveSurveyResponse = async (req, res) => {
   }
 };
 
-// Function to get all saved data entries with optional gender filter
+/// Function to get all saved data entries with optional gender filter
 const getAllSurveyResponses = async (req, res) => {
   try {
     const { startDate, endDate, gender } = req.query;
@@ -45,6 +45,7 @@ const getAllSurveyResponses = async (req, res) => {
     // Retrieve survey responses based on filters
     const allSurveyResponses = await SurveyResponse.findAll({
       where: filter,
+      order: [["dateTaken", "ASC"]], // Sort by dateTaken in ascending order
     });
 
     // Parse survey responses
