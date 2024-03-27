@@ -49,10 +49,15 @@ const getAllSurveyResponses = async (req, res) => {
     });
 
     // Parse survey responses
-    const parsedSurveyResponses = allSurveyResponses.map((response) => ({
-      ...response.toJSON(),
-      answers: response.answers,
-    }));
+    const parsedSurveyResponses = allSurveyResponses.map((response) => {
+      // Parse the answers field from JSON string to JavaScript object
+      const answers = JSON.parse(response.answers);
+
+      return {
+        ...response.toJSON(),
+        answers: answers,
+      };
+    });
 
     // Send response
     res.status(200).json(parsedSurveyResponses);
