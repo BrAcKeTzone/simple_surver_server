@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 // CORS configuration
 const corsOptions = {
-  origin: [/https:\/\/mysurveyonline\.mathsaya4kids\.site($|\/.*)/],
+  origin: [/https:\/\/my\-survey\.onrender\.com($|\/.*)/],
   methods: "GET,PUT,POST,DELETE",
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
